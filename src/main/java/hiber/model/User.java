@@ -69,15 +69,24 @@ public class User {
    public void setEmail(String email) {
       this.email = email;
    }
+
    public Car getCar() {
       return car;
    }
+
    public void setCar(Car car){
       this.car=car;
    }
 
+
    @Override
    public String toString() {
-      return getFirstName() + " " + getLastName() + " " + getEmail() + " " + getCar() ;
+      return "User{" +
+              "id=" + id +
+              ", firstName='" + firstName + '\'' +
+              ", lastName='" + lastName + '\'' +
+              ", email='" + email + '\'' +
+              ", car=" + car +
+              '}';
    }
 }

@@ -15,9 +15,12 @@ public class Car {
 
     @Column
     int serial;
+
     @OneToOne(mappedBy = "car",cascade = CascadeType.ALL)
     User owner;
+
     public Car(){}
+
     public Car(String model, int serial){
         this.model = model;
         this.serial = serial;
@@ -57,6 +60,11 @@ public class Car {
 
     @Override
     public String toString() {
-        return this.model + "-" + this.serial;
+        return "Car{" +
+                "id=" + id +
+                ", model='" + model + '\'' +
+                ", serial=" + serial +
+                ", owner=" + owner +
+                '}';
     }
 }

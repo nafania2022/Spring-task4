@@ -21,6 +21,7 @@ public class MainApp {
       carService.add(new Car("Mercedes S", 600));
       carService.add(new Car("BMW", 3));
       List<Car> carList = carService.listCar();
+      System.out.println(carList);
 
       UserService userService = context.getBean(UserService.class);
       userService.add(new User("User1", "Lastname1", "user1@mail.ru", carList.get(0)));
