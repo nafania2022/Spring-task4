@@ -1,25 +1,29 @@
 package hiber.service;
 
-import hiber.dao.CarDao;
 import hiber.model.Car;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class CarServiceImp implements CarService {
     @Autowired
-    CarDao carDao;
-    @Transactional
+    private SessionFactory sessionFactory;
+
     @Override
     public void add(Car car) {
-        carDao.add(car);
+        sessionFactory.getCurrentSession().save(car);
     }
-    @Transactional
+
     @Override
+    @SuppressWarnings("unchecked")
     public List<Car> listCar() {
-        return carDao.listCar();
+        TypedQuery< Car> query=sessionFactory.getCurrentSession().createQuery("from Car ");
+        return query.getResultList();
     }
 }

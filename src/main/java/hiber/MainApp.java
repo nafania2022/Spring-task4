@@ -37,7 +37,6 @@ public class MainApp {
          System.out.println();
       }
       System.out.println(userService.getUser("BMW", 7));
-
       context.close();
    }
 }

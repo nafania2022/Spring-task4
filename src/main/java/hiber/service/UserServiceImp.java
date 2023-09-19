@@ -1,38 +1,55 @@
 package hiber.service;
 
-import hiber.dao.UserDao;
 import hiber.model.Car;
 import hiber.model.User;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImp implements UserService {
 
    @Autowired
-   private UserDao userDao;
+   private SessionFactory sessionFactory;
 
-   @Transactional
    @Override
    public void add(User user) {
-
-      userDao.add(user);
+      long id_car = user.getCar().getId();
+      List<User> isUser = sessionFactory.getCurrentSession().createQuery("from User where car.id = :id_car" )
+              .setParameter("id_car", id_car)
+              .getResultList();
+      if (isUser.size() > 0) System.out.println("Эта машина занята");
+      else sessionFactory.getCurrentSession().save(user);
    }
 
-   @Transactional
+   @Override
+   @SuppressWarnings("unchecked")
+   public List<User> listUsers() {
+      TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
+      return query.getResultList();
+   }
+
    @Override
    public User getUser(String model, int serial) {
-
-      return userDao.getUser(model, serial);
-   }
-
-   @Transactional(readOnly = true)
-   @Override
-   public List<User> listUsers() {
-      return userDao.listUsers();
+      TypedQuery<Car> finCar = sessionFactory.getCurrentSession()
+              .createQuery("from Car where model = :model and  serial = :serial")
+              .setParameter("model", model)
+              .setParameter("serial", serial);
+      Car car = finCar.getResultList().get(0);
+      List<User> result = listUsers();
+      if (result.size() != 0) {
+         User user = result.stream()
+                 .filter(u -> u.getCar().equals(car))
+                 .findFirst()
+                 .orElse(null);
+         return user ;
+      }else return null ;
    }
 
 }
